@@ -21,9 +21,11 @@ with pdfplumber.open(enxoval_pdf) as pdf:
                         dados_para_excel.append({ # Criando a base da planilha no excel, com apenas os 'Itens' já preenchido automáticamente
                             "Ambiente": "",
                             "Itens": produto_bruto,
-                            "Quantidade": "",
-                            "Preço Unitário.": "",
-                            "Preço Total": "",
+                            "Quantidade": 0,
+                            "Preço Unitário.": 0.0,
+                            "Preço Total": 0.0,
+                            "Status": "Pendente", # Coluna de controle 
+                            "Foto": "", 
                         })   
 
 if dados_para_excel:
