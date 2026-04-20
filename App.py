@@ -38,7 +38,7 @@ if aba == "Dashboard & Lista":
     def estilizar_linhas(linha):
         if linha['Status'] == 'Comprado':
             # Define cor cinza e fundo suave para efeito "apagado"
-            return ['color: #9e9e9e; bacground-color: #f8f9fa'] * len(linha)
+            return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
         else:
             #Destaque para pendentes: Negrito e Azul
             return ['font-weight: bold; color: #0e1117'] * len(linha)    
