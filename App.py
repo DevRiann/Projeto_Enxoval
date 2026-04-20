@@ -4,10 +4,18 @@ import pandas as pd
 st.title("🏠 Enxoval do Casal Jayne & Rian 🧑🏽‍❤️‍👩🏽")
 
 df = pd.read_excel("dados_projeto.xlsx")
-st.write("Aqui estão os itens do seu enxoval:")
+
+
+# Criandp a Barra Lateral
+st.sidebar.title("Menu")
+aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista", "Carrinho de Compras"])
+
+if aba == "Dashboard & Lista":
+    st.header ("📊Resumo e Lista de Itens")
+    st.write("Aqui estão os itens do seu enxoval:")
 st.dataframe(df)
 
-#Contadem de itens
+#Contagem de itens
 total_itens = len(df)
 comprados = len(df[df['Status'] == 'Comprado'])
 pendentes = len (df[df['Status'] == 'Pendente'])
@@ -26,13 +34,6 @@ status_counts = df['Status'].value_counts()
 st.bar_chart(status_counts)
 #Exibindo o valor total gastos no final (ou em destaque)
 st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
-
-# Criandp a Barra Lateral
-st.sidebar.title("Menu")
-aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista", "Carrinho de Compras"])
-
-if aba == "Dashboard & Lista":
-    st.header ("📊Resumo e Lista de Itens")
 
 elif aba == "Carrinho de Compras":
     st.header ("🛒 Registrar Compra ou Deletar ") 
