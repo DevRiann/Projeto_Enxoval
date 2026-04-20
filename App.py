@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 
-st.title("🏠 Enxoval do Casal Jayne & Rian 🧑🏽‍❤️‍👩🏽")
+st.title("🏠 Enxoval do Casal Jayne & Rian")
 
 df = pd.read_excel("dados_projeto.xlsx")
 
