@@ -13,7 +13,7 @@ aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista", "Carrinho
 if aba == "Dashboard & Lista":
     st.header ("📊Resumo e Lista de Itens")
     st.write("Aqui estão os itens do seu enxoval:")
-    st.dataframe(df)
+    st.dataframe(df.style.apply(estilizar_linhas, axis=1))
 
 #Contagem de itens
     total_itens = len(df)
@@ -41,9 +41,9 @@ if aba == "Dashboard & Lista":
             return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
         else:
             #Destaque para pendentes: Negrito e Azul
-            return ['font-weight: bold; color: #0e1117'] * len(linha)    
+            return ['font-weight: bold; color: #007bff'] * len(linha)    
         return [''] * len(linha)
 
-    st.dataframe(df.style.apply(estilizar_linhas, axis=1))        
+            
 else:
     st.header ("🛒 Registrar Compra ou Deletar ") 
