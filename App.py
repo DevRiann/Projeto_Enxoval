@@ -35,5 +35,15 @@ if aba == "Dashboard & Lista":
 #Exibindo o valor total gastos no final (ou em destaque)
     st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
+    def estilizar_linhas(linha):
+        if linha['Status'] == 'Comprado':
+            # Define cor cinza e fundo suave para efeito "apagado"
+            return ['color: #9e9e9e; bacground-color: #f8f9fa'] * len(linha)
+        else:
+            #Destaque para pendentes: Negrito e Azul
+            return ['font-weight: bold; color: #0e1117'] * len(linha)    
+        return [''] * len(linha)
+
+    st.dataframe(df.style.apply(estilizar_linhas, axis=1))        
 else:
     st.header ("🛒 Registrar Compra ou Deletar ") 
