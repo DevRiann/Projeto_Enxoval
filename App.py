@@ -35,5 +35,5 @@ if aba == "Dashboard & Lista":
 #Exibindo o valor total gastos no final (ou em destaque)
     st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
-elif aba == "Carrinho de Compras":
+else:
     st.header ("🛒 Registrar Compra ou Deletar ") 
