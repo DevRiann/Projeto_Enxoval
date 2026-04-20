@@ -13,6 +13,15 @@ aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista", "Carrinho
 if aba == "Dashboard & Lista":
     st.header ("📊Resumo e Lista de Itens")
     st.write("Aqui estão os itens do seu enxoval:")
+
+    def estilizar_linhas(linha):
+        if linha['Status'] == 'Comprado':
+            # Define cor cinza e fundo suave para efeito "apagado"
+            return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
+        else:
+            #Destaque para pendentes: Negrito e Azul
+            return ['font-weight: bold; color: #007bff'] * len(linha)    
+        return [''] * len(linha)
     st.dataframe(df.style.apply(estilizar_linhas, axis=1))
 
 #Contagem de itens
@@ -35,14 +44,7 @@ if aba == "Dashboard & Lista":
 #Exibindo o valor total gastos no final (ou em destaque)
     st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
-    def estilizar_linhas(linha):
-        if linha['Status'] == 'Comprado':
-            # Define cor cinza e fundo suave para efeito "apagado"
-            return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
-        else:
-            #Destaque para pendentes: Negrito e Azul
-            return ['font-weight: bold; color: #007bff'] * len(linha)    
-        return [''] * len(linha)
+    
 
             
 else:
