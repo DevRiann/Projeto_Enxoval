@@ -23,6 +23,7 @@ def verificar_senha():
             if senha_digitada == SENHA_CORRETA:
                 st.session_state["autenticado"] = True
                 st.write("✅Acesso Concedido, Bem-Vindo ao Enxoval")
+                time.sleep(3)
                 st.rerun()
             else:
                 st.error("Senha incorreta! ❌")
@@ -31,8 +32,6 @@ def verificar_senha():
 
 # 3. Aplicamos a trava
 if verificar_senha():
-
-    time.sleep(3)
     
     st.title("🏠 Enxoval do Casal Jayne & Riann")
 
