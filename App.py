@@ -5,7 +5,8 @@ from streamlit_gsheets import GSheetsConnection
 st.title("🏠 Enxoval do Casal Jayne & Riann")
 
 conn = st.connection("gsheets", type=GSheetsConnection)
-df = conn.read()
+# O conn já sabe ler o secrets.toml, então basta pedir o campo 'spreadsheet'
+df = conn.read(spreadsheet=st.secrets["spreadsheet"])
 
 
 # Criandp a Barra Lateral
