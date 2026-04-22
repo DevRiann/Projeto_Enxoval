@@ -1,12 +1,12 @@
 [theme]
 # O Rosa que você escolheu para botões e detalhes
-primaryColor = "#ffffff25" 
+primaryColor = "#ffffff18" 
 
 # Fundo principal branco para manter a clareza
 backgroundColor = "#9b0040"
 
 # Cinza bem claro para a lateral, combinando com o branco
-secondaryBackgroundColor = "#F8F9FA"
+secondaryBackgroundColor = "#ffffff25"
 
 # Texto num tom grafite para não ser tão pesado quanto o preto puro
 textColor = "#FFFFFF"
