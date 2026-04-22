@@ -1,3 +1,4 @@
+"""
 import pdfplumber
 import pandas as pd
 
@@ -15,3 +16,15 @@ with pdfplumber.open(nome_do_pdf) as pdf:
         print(tabela[1])
     else:
         print("ERRO: Nenhuma tabela detectada na página 11.")
+"""
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+
+# Criar a conexão
+conn = st.connection("gsheets", type=GSheetsConnection)
+
+# Ler os dados da planilha 
+df = conn.read()
+st.title("Teste de Conexão")
+st.write("Se você está vendo os dados abaixo, a conexão funcionou!")
+st.dataframe(df)
