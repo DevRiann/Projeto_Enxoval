@@ -8,7 +8,7 @@ df = pd.read_excel("dados_projeto.xlsx")
 
 # Criandp a Barra Lateral
 st.sidebar.title("Menu")
-aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista", "Carrinho de Compras"])
+aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Fotos", "Carrinho de Compras"])
 
 if aba == "Dashboard & Lista":
     st.header ("📊Resumo e Lista de Itens")
@@ -43,9 +43,10 @@ if aba == "Dashboard & Lista":
     st.bar_chart(status_counts)
 #Exibindo o valor total gastos no final (ou em destaque)
     st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
+           
+elif aba == "Fotos":
+    st.header("📸 Fotos")
+    st.write("Fotos dos itens comprados")
 
-    
-
-            
 else:
     st.header ("🛒 Registrar Compra ou Deletar ") 
