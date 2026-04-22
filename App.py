@@ -45,10 +45,6 @@ match aba:
         st.bar_chart(status_counts)
     #Exibindo o valor total gastos no final (ou em destaque)
         st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
-           
-    case "Fotos":
-        st.header("📸 Fotos")
-        st.write("Fotos dos itens comprados")
 
     case "Carrinho de Compras":
         st.header ("🛒 Registrar Compra ou Deletar ") 
@@ -70,3 +66,7 @@ match aba:
                 st.baloons()
         else:
             st.info("PARABÉNS!! Todos os itens já foram comprados")
+    
+    case "Fotos":
+        st.header("📸 Fotos")
+        st.write("Fotos dos itens comprados")
