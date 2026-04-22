@@ -59,20 +59,26 @@ match aba:
             # Criar a caixa de seleção com esses itens
             item_selecionado = st.selectbox("Qual item você comprou?", itens_pendentes)
 
-            # Campos de input de Quantidade e Preço
+            # Campos de input de Quantidade, Preço e Foto
             quantidade = st.number_input("Quantidade", min_value=1, value=1, step=1)
             preco_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
+            foto_capturada = st.camera_input("tire uma foto do item comprado")
 
             preco_total = quantidade * preco_unitario
 
+            if foto_capturada:
+                st.success("Compra registrada com foto! 🎉")
+            else:
+                    st.warning("Que tal tirar uma para a galeria antes de ")
+            
             # Mostrar o total para o usuário 
             st.info(f"O valor total da compra será: R$ {preco_total:.2f}")
 
+            
             if st.button("Confimar Compra ✔️"):
                 # Localizar o item no DataFrame (Planilha) e mudar o status
                 df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
-                # Salvar no Excel as alterações
-                
+                # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
                 conn.update(data=df)
 
                 st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
@@ -86,3 +92,18 @@ match aba:
     case "Fotos":
         st.header("📸 Fotos")
         st.write("Fotos dos itens comprados")
+
+        ambiente_escolhido = st.selectbox("Escolha o ambiente: ", df['Ambiente'].unique())
+        itens_galeria = df[(df['Status'] == 'Comprado') & (df['Ambiente'] == ambiente_escolhido)]
+
+        # Grade percorrendo os itens de 3 em 3
+        for i in range(0, len(itens_galeria), 3):
+            cols = st.columns(3) # Cria 3 contentores lado a lado
+
+            for j in range(3):
+                if i + j < len(itens_galeria): # Verifica se ainda há itens
+                    item = itens_galeria.iloc[i + j]
+                    with cols[j]:
+                        st.imagem(item['Foto'], use_column_width=True)
+                        st.caption(f"**{item['Itens']}**")
+
