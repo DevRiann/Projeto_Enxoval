@@ -71,10 +71,10 @@ match aba:
             # Criamos duas abas para as opções de imagem
             aba_camera, aba_upload = st.tabs(["📸 Tirar Foto", "📁 Carregar Arquivo"])
             with aba_camera:
-            foto_tirada = st.camera_input("Tire a foto agora")
+                foto_tirada = st.camera_input("Tire a foto agora")
 
             with aba_upload:
-            foto_carregada = st.file_uploader("Selecione uma foto da galeria", type=['png', 'jpg', 'jpeg'])
+                foto_carregada = st.file_uploader("Selecione uma foto da galeria", type=['png', 'jpg', 'jpeg'])
 
             # Agora precisamos decidir qual das duas usar
             foto_final = foto_tirada if foto_tirada else foto_carregada
