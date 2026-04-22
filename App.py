@@ -3,6 +3,9 @@ import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
+from PIL import Image
+import io
+import time
 
 st.title("🏠 Enxoval do Casal Jayne & Riann")
 
@@ -13,7 +16,7 @@ df = conn.read(spreadsheet=st.secrets["connections"]["gsheets"]["spreadsheet"])
 
 # Criandp a Barra Lateral
 st.sidebar.title("Menu")
-aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Fotos", "Carrinho de Compras"])
+aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Galeria", "Carrinho de Compras"])
 
 
 match aba:
@@ -64,7 +67,17 @@ match aba:
             # Campos de input de Quantidade, Preço e Foto
             quantidade = st.number_input("Quantidade", min_value=1, value=1, step=1)
             preco_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
-            foto_capturada = st.camera_input("Tire uma foto do item comprado")
+            
+            # Criamos duas abas para as opções de imagem
+            aba_camera, aba_upload = st.tabs(["📸 Tirar Foto", "📁 Carregar Arquivo"])
+            with aba_camera:
+            foto_tirada = st.camera_input("Tire a foto agora")
+
+            with aba_upload:
+            foto_carregada = st.file_uploader("Selecione uma foto da galeria", type=['png', 'jpg', 'jpeg'])
+
+            # Agora precisamos decidir qual das duas usar
+            foto_final = foto_tirada if foto_tirada else foto_carregada
 
             preco_total = quantidade * preco_unitario
             
@@ -73,8 +86,17 @@ match aba:
 
             
             if st.button("Confimar Compra ✔️"):
-                if foto_capturada:
-                    def upload_drive(foto_capturada, item_selecionado, folder_id):
+                if foto_final:
+                    def upload_drive(foto_final, item_selecionado, folder_id):
+                        # 1. Processamento da Imagem com Pillow 📸
+                        img = Image.open(foto_final)
+                        if img.mode in ("RGBA", "P"):
+                        img = img.convert("RGB")
+    
+                        buffer_imagem = io.BytesIO()
+                        img.save(buffer_imagem, format="JPEG")
+                        buffer_imagem.seek(0)
+
                         # Criamos o serviço para falar com o Drive
                         service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
 
@@ -88,17 +110,21 @@ match aba:
                         }
     
                         # O conteúdo da foto em si
-                        media = MediaIoBaseUpload(foto_capturada, mimetype='image/jpeg')
+                        media = MediaIoBaseUpload(foto_final, mimetype='image/jpeg')
     
                         # Faz o upload
                         file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-    
-                        return file.get('id') # Devolve o ID da foto nova
+
+                        id_foto = file.get('id') # Devolve o ID da foto nova
+
+                        link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
+                        
+                        return link_final  
 
                     # Localizar o item no DataFrame (Planilha) e mudar o status
-                    df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
+                    df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
                     # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
-                    conn.update(data=df)
+                    conn.update(worksheet="Página1", data=df)
 
                     st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
                     st.baloons()
@@ -106,15 +132,15 @@ match aba:
                 else:
                     st.warning("Não esquece de registrar essa conquista incrivel!!🥺")
             
-                
+                time.sleep(2)
 
-                # Recarrega a página para atualizarr a lista
+                # Recarrega a página para atualizar a lista
                 st.rerun()
         else:
             st.info("PARABÉNS!! Todos os itens já foram comprados")
     
-    case "Fotos":
-        st.header("📸 Fotos")
+    case "Galeria":
+        st.header("📸 Galeria")
         st.write("Fotos dos itens comprados")
 
         ambiente_escolhido = st.selectbox("Escolha o ambiente: ", df['Ambiente'].unique())
