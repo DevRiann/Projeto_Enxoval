@@ -66,5 +66,5 @@ else:
 
             st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
             st.baloons()
-        else:
-            st.info("PARABÉNS!! Todos os itens já foram comprados")
+    else:
+        st.info("PARABÉNS!! Todos os itens já foram comprados")
