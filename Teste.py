@@ -29,3 +29,8 @@ st.title("Teste de Conexão")
 st.write("Se você está vendo os dados abaixo, a conexão funcionou!")
 st.dataframe(df)
 """
+
+import streamlit as st
+from streamlit_gsheets import GSheetsConnection
+
+st.write("Configurações encontradas:", st.secrets.keys())

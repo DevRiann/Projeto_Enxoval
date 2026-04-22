@@ -6,7 +6,7 @@ st.title("🏠 Enxoval do Casal Jayne & Riann")
 
 conn = st.connection("gsheets", type=GSheetsConnection)
 # O conn já sabe ler o secrets.toml, então basta pedir o campo 'spreadsheet'
-df = conn.read(spreadsheet=st.secrets["spreadsheet"])
+df = conn.read(spreadsheet=st.secrets["connections"]["gsheets"]["spreadsheet"])
 
 
 # Criandp a Barra Lateral
