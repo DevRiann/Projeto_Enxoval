@@ -61,7 +61,7 @@ match aba:
             quantidade = st.number_input("Quantidade", min_value=1, value=1, step=1)
             preco_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
 
-            preco_total = quantidade * valor_unitario
+            preco_total = quantidade * preco_unitario
 
             # Mostrar o total para o usuário 
             st.info(f"O valor total da compra será: R$ {preco_total:.2f}")
