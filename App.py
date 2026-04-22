@@ -65,11 +65,6 @@ match aba:
             foto_capturada = st.camera_input("Tire uma foto do item comprado")
 
             preco_total = quantidade * preco_unitario
-
-            if foto_capturada:
-                st.success("Compra registrada com foto! 🎉")
-            else:
-                    st.warning("Que tal tirar uma para a galeria antes de ")
             
             # Mostrar o total para o usuário 
             st.info(f"O valor total da compra será: R$ {preco_total:.2f}")
