@@ -86,7 +86,7 @@ match aba:
                     st.baloons()
                 
                 else:
-                    st.warning("Que tal tirar uma para a galeria antes de confirmar a comprar?! ")
+                    st.warning("Não esquece de registrar essa conquista incrivel!!🥺")
             
                 
 
