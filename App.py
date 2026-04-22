@@ -2,9 +2,10 @@ import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
 
-st.title("🏠 Enxoval do Casal Jayne & Rian")
+st.title("🏠 Enxoval do Casal Jayne & Riann")
 
-df = pd.read_excel("dados_projeto.xlsx")
+conn = st.connection("gsheets", type=GSheetsConnection)
+df = conn.read()
 
 
 # Criandp a Barra Lateral
@@ -70,8 +71,7 @@ match aba:
                 # Localizar o item no DataFrame (Planilha) e mudar o status
                 df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
                 # Salvar no Excel as alterações
-                conn = st.connection("gsheets", type=GSheetsConnection)
-                df = conn.read()
+                
                 conn.update(data=df)
 
                 st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
