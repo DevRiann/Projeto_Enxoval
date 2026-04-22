@@ -62,7 +62,7 @@ match aba:
             # Campos de input de Quantidade, Preço e Foto
             quantidade = st.number_input("Quantidade", min_value=1, value=1, step=1)
             preco_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
-            foto_capturada = st.camera_input("tire uma foto do item comprado")
+            foto_capturada = st.camera_input("Tire uma foto do item comprado")
 
             preco_total = quantidade * preco_unitario
 
@@ -76,13 +76,19 @@ match aba:
 
             
             if st.button("Confimar Compra ✔️"):
-                # Localizar o item no DataFrame (Planilha) e mudar o status
-                df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
-                # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
-                conn.update(data=df)
+                if foto_capturada:
+                    # Localizar o item no DataFrame (Planilha) e mudar o status
+                    df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
+                    # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
+                    conn.update(data=df)
 
-                st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
-                st.baloons()
+                    st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
+                    st.baloons()
+                
+                else:
+                    st.warning("Que tal tirar uma para a galeria antes de ")
+            
+                
 
                 # Recarrega a página para atualizarr a lista
                 st.rerun()
