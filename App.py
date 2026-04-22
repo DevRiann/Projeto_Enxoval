@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from streamlit_gsheets import GSheetsConnection
 
 st.title("🏠 Enxoval do Casal Jayne & Rian")
 
@@ -56,14 +57,27 @@ match aba:
             # Criar a caixa de seleção com esses itens
             item_selecionado = st.selectbox("Qual item você comprou?", itens_pendentes)
 
+            # Campos de input de Quantidade e Preço
+            quantidade = st.number_input("Quantidade", min_value=1, value=1, step=1)
+            preco_unitario = st.number_input("Valor Unitário (R$)", min_value=0.0, format="%.2f")
+
+            preco_total = quantidade * valor_unitario
+
+            # Mostrar o total para o usuário 
+            st.info(f"O valor total da compra será: R$ {preco_total:.2f}")
+
             if st.button("Confimar Compra ✔️"):
                 # Localizar o item no DataFrame (Planilha) e mudar o status
-                df.loc[df['Itens'] == item_selecionado, 'Status'] = 'Comprado'
+                df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
                 # Salvar no Excel as alterações
-                df.to_excel("dados_projeto.xlsx", index=False)
+                conn = st.connection("gsheets", type=GSheetsConnection)
+                conn.update(data=df)
 
                 st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
                 st.baloons()
+
+                # Recarrega a página para atualizarr a lista
+                st.rerun()
         else:
             st.info("PARABÉNS!! Todos os itens já foram comprados")
     
