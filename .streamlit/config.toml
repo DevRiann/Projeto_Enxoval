@@ -6,7 +6,7 @@ primaryColor = "#000000"
 backgroundColor = "#9b0040"
 
 # Cinza bem claro para a lateral, combinando com o branco
-secondaryBackgroundColor = "#b9024e59"
+secondaryBackgroundColor = "#e604753b"
 
 # Texto num tom grafite para não ser tão pesado quanto o preto puro
 textColor = "#FFFFFF"
