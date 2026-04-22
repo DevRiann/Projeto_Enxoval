@@ -5,6 +5,7 @@ from streamlit_gsheets import GSheetsConnection
 st.title("🏠 Enxoval do Casal Jayne & Riann")
 
 conn = st.connection("gsheets", type=GSheetsConnection)
+url_planilha = 
 df = conn.read()
 
 
