@@ -5,7 +5,8 @@ from streamlit_gsheets import GSheetsConnection
 st.title("🏠 Enxoval do Casal Jayne & Riann")
 
 conn = st.connection("gsheets", type=GSheetsConnection)
-df = conn.read(spreadsheet)
+url = https://docs.google.com/spreadsheets/d/1-uP7nuL356n8TlPbeEXLh3RTJNSmWxRUFFw-NEF28so/edit
+df = conn.read(spreadsheet=url)
 
 
 # Criandp a Barra Lateral
