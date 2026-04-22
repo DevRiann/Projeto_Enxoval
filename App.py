@@ -91,7 +91,7 @@ match aba:
                         # 1. Processamento da Imagem com Pillow 📸
                         img = Image.open(foto_final)
                         if img.mode in ("RGBA", "P"):
-                        img = img.convert("RGB")
+                            img = img.convert("RGB")
     
                         buffer_imagem = io.BytesIO()
                         img.save(buffer_imagem, format="JPEG")
