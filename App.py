@@ -50,3 +50,21 @@ elif aba == "Fotos":
 
 else:
     st.header ("🛒 Registrar Compra ou Deletar ") 
+
+    # Filtrar apenas os itens que ainda não foram comprados
+    itens_pendentes = df[df['Status'] == 'Pendente']['Itens'].tolist()
+
+    if itens_pendentes:
+        # Criar a caixa de seleção com esses itens
+        item_selecionado = st.selectbox("Qual item você comprou?", itens_pendentes)
+
+        if st.button("Confimar Compra ✔️"):
+            # Localizar o item no DataFrame (Planilha) e mudar o status
+            df.loc[df['Itens'] == item_selecionado, 'Status'] = 'Comprado'
+            # Salvar no Excel as alterações
+            df.to_excel("dados_projeto.xlsx", index=False)
+
+            st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
+            st.baloons()
+        else:
+            st.info("PARABÉNS!! Todos os itens já foram comprados")
