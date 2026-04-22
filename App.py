@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 from streamlit_gsheets import GSheetsConnection
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
 
 st.title("🏠 Enxoval do Casal Jayne & Riann")
 
@@ -72,6 +74,28 @@ match aba:
             
             if st.button("Confimar Compra ✔️"):
                 if foto_capturada:
+                    def upload_drive(foto_capturada, item_selecionado, folder_id)
+                        # Criamos o serviço para falar com o Drive
+                        service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
+
+                        # O ID que você pegou na URL do navegador vai aqui
+                        folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
+
+                        # Detalhes do arquivo (Metadados)
+                        file_metadata = 
+                        {
+                        'name': f"{item_selecionado}.jpg",
+                        'parents': [folder_id]
+                        }
+    
+                        # O conteúdo da foto em si
+                        media = MediaIoBaseUpload(foto_capturada, mimetype='image/jpeg')
+    
+                        # Faz o upload
+                        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+    
+                        return file.get('id') # Devolve o ID da foto nova
+
                     # Localizar o item no DataFrame (Planilha) e mudar o status
                     df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total']] = ['Comprado', quantidade, preco_unitario, preco_total]
                     # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
