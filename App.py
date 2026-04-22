@@ -74,7 +74,7 @@ match aba:
             
             if st.button("Confimar Compra ✔️"):
                 if foto_capturada:
-                    def upload_drive(foto_capturada, item_selecionado, folder_id)
+                    def upload_drive(foto_capturada, item_selecionado, folder_id):
                         # Criamos o serviço para falar com o Drive
                         service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
 
