@@ -7,6 +7,32 @@ from PIL import Image
 import io
 import time
 
+# 1. Definimos a senha que queremos
+SENHA_CORRETA = st.secrets["password"]
+
+# 2. Criamos uma função de login
+def verificar_senha():
+    if "autenticado" not in st.session_state:
+        st.session_state["autenticado"] = False
+
+    if not st.session_state["autenticado"]:
+        st.title("Acesso Restrito 🔒")
+        senha_digitada = st.text_input("Digite a senha para acessar:", type="password")
+        
+        if st.button("Entrar"):
+            if senha_digitada == SENHA_CORRETA:
+                st.session_state["autenticado"] = True
+                st.rerun()
+            else:
+                st.error("Senha incorreta! ❌")
+        return False
+    return True
+
+# 3. Aplicamos a trava
+if verificar_senha():
+    # Todo o seu código (Upload, Planilha, etc.) entra aqui!
+    st.write("Bem-vindo ao sistema!")
+
 st.title("🏠 Enxoval do Casal Jayne & Riann")
 
 conn = st.connection("gsheets", type=GSheetsConnection)

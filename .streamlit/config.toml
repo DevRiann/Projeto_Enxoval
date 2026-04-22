@@ -1,14 +1,12 @@
 [theme]
-# O Rosa que você escolheu para botões e detalhes
-primaryColor = "#000000" 
+# Configuração de estilização do site
 
-# Fundo principal branco para manter a clareza
-backgroundColor = "#9b0040"
+primaryColor = "#000000" # Para aba lateral e botãos
 
-# Cinza bem claro para a lateral, combinando com o branco
-secondaryBackgroundColor = "#e604753b"
+backgroundColor = "#9b0040" # Para o plano de fundo
 
-# Texto num tom grafite para não ser tão pesado quanto o preto puro
-textColor = "#FFFFFF"
+secondaryBackgroundColor = "#e604753b" # Para os ícones clicáveis
 
-font = "sans serif"
+textColor = "#FFFFFF" # Para o texto
+
+font = "sans serif" # Fonte do texto
