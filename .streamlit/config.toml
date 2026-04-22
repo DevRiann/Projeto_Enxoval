@@ -1,9 +1,9 @@
 [theme]
 # O Rosa que você escolheu para botões e detalhes
-primaryColor = "#FF69B4" 
+primaryColor = "#FFFFFF" 
 
 # Fundo principal branco para manter a clareza
-backgroundColor = "#FFFFFF"
+backgroundColor = "#9b0040"
 
 # Cinza bem claro para a lateral, combinando com o branco
 secondaryBackgroundColor = "#F8F9FA"
