@@ -72,7 +72,7 @@ match aba:
                 # Salvar no Excel as alterações
                 conn = st.connection("gsheets", type=GSheetsConnection)
                 df = conn.read()
-                conn.update(data=df)
+                conn.update(df)
 
                 st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
                 st.baloons()
