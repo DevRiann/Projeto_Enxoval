@@ -82,8 +82,7 @@ match aba:
                         folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
 
                         # Detalhes do arquivo (Metadados)
-                        file_metadata = 
-                        {
+                        file_metadata = {
                         'name': f"{item_selecionado}.jpg",
                         'parents': [folder_id]
                         }
