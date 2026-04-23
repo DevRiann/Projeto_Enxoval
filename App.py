@@ -7,10 +7,10 @@ from PIL import Image
 import io
 import time
 
-# 1. Definimos a senha que queremos
+# Definir a senha de login
 SENHA_CORRETA = st.secrets["credentials"]["password"]
 
-# 2. Criamos uma função de login
+# Criamos uma função de login
 def verificar_senha():
     if "autenticado" not in st.session_state:
         st.session_state["autenticado"] = False
@@ -59,24 +59,24 @@ if verificar_senha():
                 return [''] * len(linha)
             st.dataframe(df.style.apply(estilizar_linhas, axis=1))
 
-        #Contagem de itens
+            # Contagem de itens
             total_itens = len(df)
             comprados = len(df[df['Status'] == 'Comprado'])
             pendentes = len (df[df['Status'] == 'Pendente'])
-        #Cáculo de valores 
+            # Cáculo de valores 
             valor_gasto = df[df['Status'] == 'Comprado']['Preço Total'].sum()
 
             st.subheader("Resumo do Enxoval")
 
-        # Criando colunas para as métricas
+            # Criando colunas para as métricas
             col1, col2, col3 = st.columns(3)
             col1.metric("Total de Itens", total_itens)
             col2.metric("Itens Comprados", comprados, delta=f"{comprados/total_itens}")
             col3.metric("Itens Pendentes", pendentes)
-        # Criandp um gráfico simples de barras
+            # Criandp um gráfico simples de barras
             status_counts = df['Status'].value_counts()
             st.bar_chart(status_counts)
-        #Exibindo o valor total gastos no final (ou em destaque)
+            # Exibindo o valor total gastos no final (ou em destaque)
             st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
         case "Carrinho de Compras":

@@ -1,11 +1,11 @@
 [theme]
 # Configuração de estilização do site
 
-primaryColor = "#000000" # Para aba lateral e botãos
+primaryColor = "#9b00413f" # Para aba os itens selecionáveis
 
 backgroundColor = "#9b0040" # Para o plano de fundo
 
-secondaryBackgroundColor = "#e604753b" # Para os ícones clicáveis
+secondaryBackgroundColor = "#000000" # Para as aba laterais e botões
 
 textColor = "#FFFFFF" # Para o texto
 
