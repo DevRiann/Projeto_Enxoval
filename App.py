@@ -55,7 +55,7 @@ if verificar_senha():
                     return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
                 else:
                     #Destaque para pendentes: Negrito e Azul
-                    return ['font-weight: bold; color: #007bff'] * len(linha)    
+                    return ['font-weight: bold; color: #ffffff'] * len(linha)    
                 return [''] * len(linha)
             st.dataframe(df.style.apply(estilizar_linhas, axis=1))
 
