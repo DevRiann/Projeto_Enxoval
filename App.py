@@ -82,7 +82,7 @@ if verificar_senha():
 
             if itens_pendentes:
                 # Criar a caixa de seleção com esses itens
-                item_selecionado = st.selectbox("Qual item você comprou?", itens_pendentes, key="sb_comprar")
+                item_selecionado = st.selectbox("Qual item você comprou?", itens_pendentes)
 
                 # Campos de input de Quantidade, Preço e Foto
                 quantidade = st.number_input("Quantidade", min_value=1, value=1, step=1)
@@ -217,11 +217,6 @@ if verificar_senha():
 
 
             if st.button("❌ Excluir a compra"):
-                # Em vez de filtrar apenas pendentes para o delete, pegue a lista completa
-                itens_comprado = df[df['Status'] == 'Comprado']['Itens'].tolist()
-
-                item_para_deletar = st.selectbox("Selecione o item para excluir:", itens_comprado, key="sd_deletar")
-
                 if item_para_deletar:
                     # 2. Localiza e atualiza os dados
                     df.loc[df['Itens'] == item_para_deletar, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
