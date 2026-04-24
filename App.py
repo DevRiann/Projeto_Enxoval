@@ -148,30 +148,30 @@ if verificar_senha():
                     if st.button("✔️ Confimar Compra"):
                     # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
                         if foto_final is not None:
-                            try:
-                                string_foto = converter_para_base64(foto_final)
-                                df['Foto'] = df['Foto'].astype(str)
-                
-                                # 2. Localiza e atualiza os dados
-                                df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                                    'Comprado', 
-                                    float(quantidade), 
-                                    float(preco_unitario), 
-                                    float(preco_total), 
-                                    str(string_foto) # Garante que entra como string
-                                ]
-                                
-                                # 3. Limpeza de Segurança: Substituir valores NaN por vazio 
-                                # (O Google Sheets odeia receber NaN do pandas)
-                                df = df.fillna("")
+                            
+                            string_foto = converter_para_base64(foto_final)
+                            df['Foto'] = df['Foto'].astype(str)
+            
+                            # 2. Localiza e atualiza os dados
+                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                                'Comprado', 
+                                float(quantidade), 
+                                float(preco_unitario), 
+                                float(preco_total), 
+                                str(string_foto) # Garante que entra como string
+                            ]
+                            
+                            # 3. Limpeza de Segurança: Substituir valores NaN por vazio 
+                            # (O Google Sheets odeia receber NaN do pandas)
+                            df = df.fillna("")
 
-                                # 4. Tenta o envio
-                                try:
-                                    conn.update(worksheet="ENXOVAL", data=df)
-                                    st.success("Salvo com sucesso!")
-                                    st.rerun()
-                                except Exception as e:
-                                    st.error(f"Erro na API do Sheets: {e}")
+                            # 4. Tenta o envio
+                            try:
+                                conn.update(worksheet="ENXOVAL", data=df)
+                                st.success("Salvo com sucesso!")
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Erro na API do Sheets: {e}")
                         else:
                             st.warning("Não esqueça de registrar essa conquista incrível🥺")
                 
