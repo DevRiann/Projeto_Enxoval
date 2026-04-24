@@ -1,6 +1,5 @@
 # Arquivos de Segredo do Streamlit
 .streamlit/secrets.toml
-.streamlit/config.toml
 
 # Documentos e Planilhas (arquivos locais)
 *.xlsx
