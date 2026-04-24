@@ -202,8 +202,16 @@ if verificar_senha():
                         if i + j < len(itens_galeria): # Verifica se ainda há itens
                             item = itens_galeria.iloc[i + j]
                             with cols[j]:
-                                # Link da imagem padrão caso "Foto" esteja vazio
-                                url_foto = item['Foto'] if item['Foto'] else "https://via.placeholder.com/150?text=Sem+Foto"
-                                st.image(item['Foto'], use_container_width=True)
+                                # 1. Pegamos o valor da coluna Foto
+                                link_foto = item['Foto']
+                                
+                                # 2. Verificamos se o link existe e não é nulo (NaN)
+                                if pd.notna(link_foto) and str(link_foto).strip() != "":
+                                    # Se o link for válido, exibe a foto
+                                    st.image(link_foto, use_container_width=True)
+                                else:
+                                    # Se estiver vazio, exibe uma imagem padrão (Placeholder)
+                                    st.image("https://via.placeholder.com/150?text=Sem+Foto", use_container_width=True)
+                                    
                                 st.caption(f"**{item['Itens']}**")
 
