@@ -79,9 +79,7 @@ if verificar_senha():
             porcentagem = proporcional * 100
 
             st.divider() # Uma linha sutil para separar da lista
-            st.markdown(f"### 📊 Progresso do Enxoval: {porcentagem:.0f}%")
-            st.progress(proporcional)
-            st.write(f"Você já adquiriu **{comprados}** de **{total_itens}** itens planejados. Continue assim! ✨")
+            st.subheader(f"Progresso do Enxoval: {porcentagem:.0f}%") # Porcentagem do que já foi comprado
 
             # Exibindo o valor total gastos no final (ou em destaque)
             st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
