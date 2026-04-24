@@ -119,7 +119,6 @@ if verificar_senha():
                     img.save(buffer_imagem, format="JPEG")
                     buffer_imagem.seek(0)
 
-                    email_pessoal = st.secrets["credentials"]["persona_email"]
                     # Credencias
                     creds = service_account.Credentials.from_service_account_info( st.secrets["connections"]["gsheets"], scopes=["https://www.googleapis.com/auth/drive"])
 
