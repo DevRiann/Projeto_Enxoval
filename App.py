@@ -179,19 +179,20 @@ if verificar_senha():
                 with col2:
                     if st.button("❌ Excluir a conta"):
                         # Em vez de filtrar apenas pendentes para o delete, pegue a lista completa
-                        lista_itens_completa = df['Itens'].tolist()
+                        itens_comprado = df[df['Status'] == 'Comprado']['Itens'].tolist()
 
-                        item_para_deletar = st.selectbox("Selecione o item para excluir:", lista_itens_completa)
+                        item_para_deletar = st.selectbox("Selecione o item para excluir:", itens_comprado)
 
-                        # 2. Localiza e atualiza os dados
-                        df.loc[df['Itens'] == item_para_deletar, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                            'Pendente', 0, 0.0, 0.0, "" ]
-                        
-                        conn.update(worksheet="ENXOVAL", data=df)
-                        st.success("O item {item_para_deletar} foi excluído com sucesso!!")
-                        time.sleep(2)
-                        st.rerun()
-                        
+                        if item_para_deletar:
+                            # 2. Localiza e atualiza os dados
+                            df.loc[df['Itens'] == item_para_deletar, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                                'Pendente', 0, 0.0, 0.0, "" ]
+                            
+                            conn.update(worksheet="ENXOVAL", data=df)
+                            st.success("O item {item_para_deletar} foi excluído com sucesso!!")
+                            time.sleep(2)
+                            st.rerun()
+
             else:
                 st.info("PARABÉNS!! Todos os itens já foram comprados🍾")
     
