@@ -41,7 +41,7 @@ if verificar_senha():
 
     # Criandp a Barra Lateral
     st.sidebar.title("Menu")
-    aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Galeria", "Carrinho de Compras"])
+    aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Ver Enxoval", "Carrinho de Compras"])
 
 
     match aba:
@@ -191,7 +191,7 @@ if verificar_senha():
             ambiente_escolhido = st.selectbox("Escolha o ambiente: ", df['Ambiente'].unique())
             itens_galeria = df[(df['Status'] == 'Comprado') & (df['Ambiente'] == ambiente_escolhido)]
 
-            if itens_galeria.emoty:
+            if itens_galeria.empty:
                 st.info("Nenhum item comprado neste ambiente ainda 🥺")
             else:
                 # Grade percorrendo os itens de 3 em 3
