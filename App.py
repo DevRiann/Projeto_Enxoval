@@ -104,82 +104,106 @@ if verificar_senha():
                 # Agora precisamos decidir qual das duas usar
                 foto_final = foto_tirada if foto_tirada else foto_carregada
 
+                def upload_drive(foto_final, item_selecionado, folder_id):
+                    # 1. Processamento da Imagem com Pillow 📸
+                    img = Image.open(foto_final)
+                    if img.mode in ("RGBA", "P"):
+                        img = img.convert("RGB")
+    
+                        buffer_imagem = io.BytesIO()
+                        img.save(buffer_imagem, format="JPEG")
+                        buffer_imagem.seek(0)
+
+                        # Criamos o serviço para falar com o Drive
+                        service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
+
+                        # O ID que você pegou na URL do navegador vai aqui
+                        folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
+
+                        # Detalhes do arquivo (Metadados)
+                        file_metadata = {
+                        'name': f"{item_selecionado}.jpg",
+                        'parents': [folder_id]
+                        }
+    
+                        # O conteúdo da foto em si
+                        media = MediaIoBaseUpload(foto_final, mimetype='image/jpeg')
+
+                        # Faz o upload
+                        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+
+                        id_foto = file.get('id') # Devolve o ID da foto nova
+
+                        link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
+                        
+                        return link_final  
+
                 preco_total = quantidade * preco_unitario
             
                 # Mostrar o total para o usuário 
                 st.info(f"O valor total da compra será: R$ {preco_total:.2f}")
 
-            
-                if st.button("Confimar Compra ✔️"):
-                    if foto_final:
-                        def upload_drive(foto_final, item_selecionado, folder_id):
-                            # 1. Processamento da Imagem com Pillow 📸
-                            img = Image.open(foto_final)
-                            if img.mode in ("RGBA", "P"):
-                                img = img.convert("RGB")
-    
-                            buffer_imagem = io.BytesIO()
-                            img.save(buffer_imagem, format="JPEG")
-                            buffer_imagem.seek(0)
+                col1, col2 = st.columns(2)
 
-                            # Criamos o serviço para falar com o Drive
-                            service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
+                with col1:
 
-                            # O ID que você pegou na URL do navegador vai aqui
-                            folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
+                    if st.button("✔️ Confimar Compra"):
+                        if foto_final:
+                            link_final = upload_drive(foto_final, item_selecionado, folder_id)
 
-                            # Detalhes do arquivo (Metadados)
-                            file_metadata = {
-                            'name': f"{item_selecionado}.jpg",
-                            'parents': [folder_id]
-                            }
-    
-                            # O conteúdo da foto em si
-                            media = MediaIoBaseUpload(foto_final, mimetype='image/jpeg')
-    
-                            # Faz o upload
-                            file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+                                # Localizar o item no DataFrame (Planilha) e mudar o status
+                                df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
+                                # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
+                                conn.update(worksheet="Página1", data=df)
 
-                            id_foto = file.get('id') # Devolve o ID da foto nova
-
-                            link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
-                        
-                            return link_final  
-
-                            # Localizar o item no DataFrame (Planilha) e mudar o status
-                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
-                            # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
-                            conn.update(data=df)
-
-                            st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
-                            st.baloons()
+                                st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
+                                st.baloons()
                             
-                            time.sleep(2)
+                                time.sleep(2)
                             
                              # Recarrega a página para atualizar a lista
-                            st.rerun()
+                                st.rerun()
                 
-                    else:
-                        st.warning("Não esquece de registrar essa conquista incrivel!!🥺")
-                   
+                        else:
+                            st.warning("Não esquece de registrar essa conquista incrivel!!🥺")
+                
+                with col2:
+
+                    item_atual = df[df['Itens'] == item_selecionado].iloc[0]
+
+                    if item_atual['Status'] == 'Comprado':
+                        if st.button("❌ Deletar Compra "):
+                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                            'Pendente', 0, 0.0, 0.0, ""]
+
+                            conn.update(worksheet="Página1", data=df)
+
+                            st.warning(f"A compra de {item_selecionado} foi excluída!")
+                            time.sleep(2)
+                            st.rerun()
             else:
                 st.info("PARABÉNS!! Todos os itens já foram comprados")
     
         case "Galeria":
-            st.header("📸 Galeria")
+            st.header("🎁 Ver Enxoval")
             st.write("Fotos dos itens comprados")
 
             ambiente_escolhido = st.selectbox("Escolha o ambiente: ", df['Ambiente'].unique())
             itens_galeria = df[(df['Status'] == 'Comprado') & (df['Ambiente'] == ambiente_escolhido)]
 
-            # Grade percorrendo os itens de 3 em 3
-            for i in range(0, len(itens_galeria), 3):
-                cols = st.columns(3) # Cria 3 contentores lado a lado
+            if itens_galeria.emoty:
+                st.info("Nenhum item comprado neste ambiente ainda 🥺")
+            else:
+                # Grade percorrendo os itens de 3 em 3
+                for i in range(0, len(itens_galeria), 3):
+                    cols = st.columns(3) # Cria 3 contentores lado a lado
 
-                for j in range(3):
-                    if i + j < len(itens_galeria): # Verifica se ainda há itens
-                        item = itens_galeria.iloc[i + j]
-                        with cols[j]:
-                            st.imagem(item['Foto'], use_column_width=True)
-                            st.caption(f"**{item['Itens']}**")
+                    for j in range(3):
+                        if i + j < len(itens_galeria): # Verifica se ainda há itens
+                            item = itens_galeria.iloc[i + j]
+                            with cols[j]:
+                                # Link da imagem padrão caso "Foto" esteja vazio
+                                url_foto = item['Foto'] if item['Foto'] else "C:\Users\jeffr\OneDrive\Desktop\PYTHON\Projeto_Enxoval\My_Photo.jpeg"
+                                st.image(item['Foto'], use_container_width=True)
+                                st.caption(f"**{item['Itens']}**")
 
