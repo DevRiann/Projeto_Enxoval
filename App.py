@@ -117,14 +117,14 @@ if verificar_senha():
                         
                         # 2. Redimensiona para não estourar o limite da célula do Sheets
                         # (Largura máxima de 600px mantém a qualidade e reduz o tamanho do texto)
-                        img.thumbnail((400, 400))
+                        img.thumbnail((600, 600))
                         
                         if img.mode in ("RGBA", "P"):
                             img = img.convert("RGB")
                         
                         # 3. Salva no buffer em formato JPEG comprimido
                         buffer_imagem = io.BytesIO()
-                        img.save(buffer_imagem, format="JPEG", quality=50, optimize=True) 
+                        img.save(buffer_imagem, format="JPEG", quality=70, optimize=True) 
                         
                         # 4. Transforma os bytes em String Base64
                         foto_b64 = base64.b64encode(buffer_imagem.getvalue()).decode('utf-8')
