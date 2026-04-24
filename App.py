@@ -168,7 +168,9 @@ if verificar_senha():
                             # 4. Tenta o envio
                             try:
                                 conn.update(worksheet="ENXOVAL", data=df)
-                                st.success("Salvo com sucesso!")
+                                st.success("O item {item_selecionado} foi comprado com sucesso!!")
+                                st.balloons()
+                                time.sleep(2)
                                 st.rerun()
                             except Exception as e:
                                 st.error(f"Erro na API do Sheets: {e}")
