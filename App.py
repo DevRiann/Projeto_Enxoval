@@ -136,6 +136,8 @@ if verificar_senha():
 
                     id_foto = file.get('id') # Devolve o ID da foto nova
 
+                    service.permissions().create(fileId = id_foto, body={'type': 'anyone', 'role': 'reader' }, supportsAllDrives=True).execute()
+                    
                     link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
                     
                     return link_final  
