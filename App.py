@@ -39,6 +39,9 @@ if verificar_senha():
     # O conn já sabe ler o secrets.toml, então basta pedir o campo 'spreadsheet'
     df = conn.read(spreadsheet=st.secrets["connections"]["gsheets"]["spreadsheet"])
 
+    # O ID que você pegou na URL do navegador vai aqui
+    folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
+
     # Criandp a Barra Lateral
     st.sidebar.title("Menu")
     aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Ver Enxoval", "Carrinho de Compras"])
@@ -116,9 +119,6 @@ if verificar_senha():
 
                         # Criamos o serviço para falar com o Drive
                         service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
-
-                        # O ID que você pegou na URL do navegador vai aqui
-                        folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
 
                         # Detalhes do arquivo (Metadados)
                         file_metadata = {
@@ -203,7 +203,7 @@ if verificar_senha():
                             item = itens_galeria.iloc[i + j]
                             with cols[j]:
                                 # Link da imagem padrão caso "Foto" esteja vazio
-                                url_foto = item['Foto'] if item['Foto'] else "Projeto_Enxoval\My_Photo.jpeg"
+                                url_foto = item['Foto'] if item['Foto'] else "https://via.placeholder.com/150?text=Sem+Foto"
                                 st.image(item['Foto'], use_container_width=True)
                                 st.caption(f"**{item['Itens']}**")
 
