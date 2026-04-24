@@ -151,7 +151,7 @@ if verificar_senha():
                             try:
                                 string_foto = converter_para_base64(foto_final)
                                 # Verifique se a função realmente devolveu o link antes de salvar
-                                if link_final:
+                                if string_foto:
                                     df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
                                         'Comprado', quantidade, preco_unitario, preco_total, string_foto]
                                     conn.update(worksheet="ENXOVAL", data=df)
