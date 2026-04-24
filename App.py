@@ -105,7 +105,7 @@ if verificar_senha():
                     foto_carregada = st.file_uploader("Selecione uma foto da galeria", type=['png', 'jpg', 'jpeg'])
 
                 # Agora precisamos decidir qual das duas usar
-                foto_final = foto_tirada if foto_tirada else foto_carregada
+                foto_final = foto_tirada if foto_tirada is not None else foto_carregada
 
                 def upload_drive(foto_final, item_selecionado, folder_id):
                     # 1. Processamento da Imagem com Pillow 📸
@@ -113,30 +113,30 @@ if verificar_senha():
                     if img.mode in ("RGBA", "P"):
                         img = img.convert("RGB")
     
-                        buffer_imagem = io.BytesIO()
-                        img.save(buffer_imagem, format="JPEG")
-                        buffer_imagem.seek(0)
+                    buffer_imagem = io.BytesIO()
+                    img.save(buffer_imagem, format="JPEG")
+                    buffer_imagem.seek(0)
 
-                        # Criamos o serviço para falar com o Drive
-                        service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
+                    # Criamos o serviço para falar com o Drive
+                    service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
 
-                        # Detalhes do arquivo (Metadados)
-                        file_metadata = {
-                        'name': f"{item_selecionado}.jpg",
-                        'parents': [folder_id]
-                        }
-    
-                        # O conteúdo da foto em si
-                        media = MediaIoBaseUpload(foto_final, mimetype='image/jpeg')
+                    # Detalhes do arquivo (Metadados)
+                    file_metadata = {
+                    'name': f"{item_selecionado}.jpg",
+                    'parents': [folder_id]
+                    }
 
-                        # Faz o upload
-                        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+                    # O conteúdo da foto em si
+                    media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg')
 
-                        id_foto = file.get('id') # Devolve o ID da foto nova
+                    # Faz o upload
+                    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
-                        link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
-                        
-                        return link_final  
+                    id_foto = file.get('id') # Devolve o ID da foto nova
+
+                    link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
+                    
+                    return link_final  
 
                 preco_total = quantidade * preco_unitario
             
@@ -150,6 +150,8 @@ if verificar_senha():
                     if st.button("✔️ Confimar Compra"):
                         if foto_final:
                             link_final = upload_drive(foto_final, item_selecionado, folder_id)
+
+                            st.write(f"Link gerado: {link_final}")
 
                             # Localizar o item no DataFrame (Planilha) e mudar o status
                             df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
