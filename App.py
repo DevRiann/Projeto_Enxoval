@@ -151,18 +151,18 @@ if verificar_senha():
                         if foto_final:
                             link_final = upload_drive(foto_final, item_selecionado, folder_id)
 
-                                # Localizar o item no DataFrame (Planilha) e mudar o status
-                                df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
-                                # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
-                                conn.update(worksheet="Página1", data=df)
+                            # Localizar o item no DataFrame (Planilha) e mudar o status
+                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
+                            # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
+                            conn.update(worksheet="Página1", data=df)
 
-                                st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
-                                st.baloons()
+                            st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
+                            st.baloons()
                             
-                                time.sleep(2)
-                            
-                             # Recarrega a página para atualizar a lista
-                                st.rerun()
+                            time.sleep(2)
+                        
+                            # Recarrega a página para atualizar a lista
+                            st.rerun()
                 
                         else:
                             st.warning("Não esquece de registrar essa conquista incrivel!!🥺")
