@@ -203,7 +203,7 @@ if verificar_senha():
                             item = itens_galeria.iloc[i + j]
                             with cols[j]:
                                 # Link da imagem padrão caso "Foto" esteja vazio
-                                url_foto = item['Foto'] if item['Foto'] else "C:\Users\jeffr\OneDrive\Desktop\PYTHON\Projeto_Enxoval\My_Photo.jpeg"
+                                url_foto = item['Foto'] if item['Foto'] else "Projeto_Enxoval\My_Photo.jpeg"
                                 st.image(item['Foto'], use_container_width=True)
                                 st.caption(f"**{item['Itens']}**")
 
