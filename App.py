@@ -119,28 +119,32 @@ if verificar_senha():
                     img.save(buffer_imagem, format="JPEG")
                     buffer_imagem.seek(0)
 
-                    # Criamos o serviço para falar com o Drive
-                    service = build('drive','v3', credentials = service_account.Credentials.from_service_account_info(st.secrets["connections"]["gsheets"],scopes=["https://www.googleapis.com/auth/drive"]))
+                    # Credencias
+                    creds = service_account.Credentials.from_service_account_info( st.secrets["connections"][gsheets], scopes=["https://www.googleapis.com/auth/drive"])
 
-                    # Detalhes do arquivo (Metadados)
-                    file_metadata = {
-                    'name': f"{item_selecionado}.jpg",
-                    'parents': [folder_id]
-                    }
+                    # Criando o serviço para API interagir com o Google Drive
+                    service = build('drive', 'v3', credentials=creds)                    
 
-                    # O conteúdo da foto em si
-                    media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg', resumable=True)
+                    try:
+                        # Detalhes do arquivo (Metadados)
+                        file_metadata = {'name': f"{item_selecionado}.jpg",'parents': [folder_id]}
 
-                    # Faz o upload
-                    file = service.files().create(body=file_metadata, media_body=media, fields='id', supportsAllDrives=True).execute()
+                        # O conteúdo da foto em si
+                        media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg', resumable=False)
 
-                    id_foto = file.get('id') # Devolve o ID da foto nova
+                        # Faz o upload
+                        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
 
-                    service.permissions().create(fileId = id_foto, body={'type': 'anyone', 'role': 'reader' }, supportsAllDrives=True).execute()
+                        id_foto = file.get('id') # Devolve o ID da foto nova
+
+                        service.permissions().create(fileId = id_foto, body={'type': 'anyone', 'role': 'reader' }).execute()
                     
-                    link_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
+                        url_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
                     
-                    return link_final  
+                        return url_final
+                    except Exception as e:
+                        st.error(f"Erro no Upload: {e}")
+                        return None
 
                 preco_total = quantidade * preco_unitario
             
@@ -157,6 +161,7 @@ if verificar_senha():
                             try:
                                 st.write(f"DEBUG: foto={type(foto_final)}, item={item_selecionado}, folder={folder_id}")
                                 link_final = upload_drive(foto_final, item_selecionado, folder_id)
+                                st.write(f"O link que será salvo é: {link_final}")
                                 
                                 # Verifique se a função realmente devolveu o link antes de salvar
                                 if link_final:
