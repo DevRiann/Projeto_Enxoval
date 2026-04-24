@@ -47,24 +47,13 @@ if verificar_senha():
 
     # Criandp a Barra Lateral
     st.sidebar.title("Menu")
-    aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Lista","Ver Enxoval", "Carrinho de Compras"])
+    aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Valores Total","Ver Enxoval", "Carrinho de Compras", "Gerenciar & Excluir "])
 
 
     match aba:
         case "Dashboard & Lista":
-            st.header ("📊Resumo e Lista de Itens")
-            st.write("Aqui estão os itens do seu enxoval:")
-
-            def estilizar_linhas(linha):
-                if linha['Status'] == 'Comprado':
-                    # Define cor cinza e fundo suave para efeito "apagado"
-                    return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
-                else:
-                    #Destaque para pendentes: Negrito e Azul
-                    return ['font-weight: bold; color: #ffffff'] * len(linha)    
-                return [''] * len(linha)
-            st.dataframe(df.style.apply(estilizar_linhas, axis=1))
-
+            st.header ("📊Resumo e Valor Total")
+            
             # Contagem de itens
             total_itens = len(df)
             comprados = len(df[df['Status'] == 'Comprado'])
@@ -86,7 +75,7 @@ if verificar_senha():
             st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
         case "Carrinho de Compras":
-            st.header ("🛒 Registrar Compra ou Deletar ") 
+            st.header ("🛒 Registrar Compra ") 
 
             # Filtrar apenas os itens que ainda não foram comprados
             itens_pendentes = df[df['Status'] == 'Pendente']['Itens'].tolist()
@@ -177,7 +166,7 @@ if verificar_senha():
                             st.warning("Não esqueça de registrar essa conquista incrível🥺")
                 
                 with col2:
-                    if st.button("❌ Excluir a conta"):
+                    if st.button("❌ Excluir a compra"):
                         # Em vez de filtrar apenas pendentes para o delete, pegue a lista completa
                         itens_comprado = df[df['Status'] == 'Comprado']['Itens'].tolist()
 
@@ -189,7 +178,7 @@ if verificar_senha():
                                 'Pendente', 0, 0.0, 0.0, "" ]
                             
                             conn.update(worksheet="ENXOVAL", data=df)
-                            st.success("O item {item_para_deletar} foi excluído com sucesso!!")
+                            st.success(f"O item {item_para_deletar} foi excluído com sucesso!!")
                             time.sleep(2)
                             st.rerun()
 
@@ -226,4 +215,40 @@ if verificar_senha():
                                     st.image("https://via.placeholder.com/150?text=Sem+Foto", use_container_width=True)
                                     
                                 st.caption(f"**{item['Itens']}**")
+
+        case "Gerenciar & Excluir":
+            st.header("📋 Lista Completa e Excluir Itens")
+
+            st.write("Aqui estão os itens do seu enxoval:")
+            def estilizar_linhas(linha):
+                if linha['Status'] == 'Comprado':
+                    # Define cor cinza e fundo suave para efeito "apagado"
+                    return ['color: #9e9e9e; bacground-color: #007bff'] * len(linha)
+                else:
+                    #Destaque para pendentes: Negrito e Azul
+                    return ['font-weight: bold; color: #ffffff'] * len(linha)    
+                return [''] * len(linha)
+            st.dataframe(df.style.apply(estilizar_linhas, axis=1))
+
+            st.subheader("Excluir Compra")
+            itens_comprado = df[df['Status'] == 'Comprado']['Itens'].tolist()
+            item_para_deletar = st.selectbox("Selecione o item para excluir:", itens_comprado)
+
+
+            if st.button("❌ Excluir a compra"):
+                # Em vez de filtrar apenas pendentes para o delete, pegue a lista completa
+                itens_comprado = df[df['Status'] == 'Comprado']['Itens'].tolist()
+
+                item_para_deletar = st.selectbox("Selecione o item para excluir:", itens_comprado)
+
+                if item_para_deletar:
+                    # 2. Localiza e atualiza os dados
+                    df.loc[df['Itens'] == item_para_deletar, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                        'Pendente', 0, 0.0, 0.0, "" ]
+                    
+                    conn.update(worksheet="ENXOVAL", data=df)
+                    st.success(f"O item {item_para_deletar} foi excluído com sucesso!!")
+                    time.sleep(2)
+                    st.rerun()
+
 
