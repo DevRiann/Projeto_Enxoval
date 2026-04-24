@@ -130,57 +130,38 @@ if verificar_senha():
                 # Mostrar o total para o usuário 
                 st.info(f"O valor total da compra será: R$ {preco_total:.2f}")
 
-                col1, col2 = st.columns(2)
+             
+                if st.button("✔️ Confimar Compra"):
+                # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
+                    if foto_final is not None:
+                        
+                        string_foto = converter_para_base64(foto_final)
+                        df['Foto'] = df['Foto'].astype(str)
+        
+                        # 2. Localiza e atualiza os dados
+                        df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                            'Comprado', 
+                            float(quantidade), 
+                            float(preco_unitario), 
+                            float(preco_total), 
+                            str(string_foto) # Garante que entra como string
+                        ]
+                        
+                        # 3. Limpeza de Segurança: Substituir valores NaN por vazio 
+                        # (O Google Sheets odeia receber NaN do pandas)
+                        df = df.fillna("")
 
-                with col1:
-                    if st.button("✔️ Confimar Compra"):
-                    # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
-                        if foto_final is not None:
-                            
-                            string_foto = converter_para_base64(foto_final)
-                            df['Foto'] = df['Foto'].astype(str)
-            
-                            # 2. Localiza e atualiza os dados
-                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                                'Comprado', 
-                                float(quantidade), 
-                                float(preco_unitario), 
-                                float(preco_total), 
-                                str(string_foto) # Garante que entra como string
-                            ]
-                            
-                            # 3. Limpeza de Segurança: Substituir valores NaN por vazio 
-                            # (O Google Sheets odeia receber NaN do pandas)
-                            df = df.fillna("")
-
-                            # 4. Tenta o envio
-                            try:
-                                conn.update(worksheet="ENXOVAL", data=df)
-                                st.success("O item {item_selecionado} foi comprado com sucesso!!")
-                                st.balloons()
-                                time.sleep(2)
-                                st.rerun()
-                            except Exception as e:
-                                st.error(f"Erro na API do Sheets: {e}")
-                        else:
-                            st.warning("Não esqueça de registrar essa conquista incrível🥺")
-                
-                with col2:
-                    if st.button("❌ Excluir a compra"):
-                        # Em vez de filtrar apenas pendentes para o delete, pegue a lista completa
-                        itens_comprado = df[df['Status'] == 'Comprado']['Itens'].tolist()
-
-                        item_para_deletar = st.selectbox("Selecione o item para excluir:", itens_comprado)
-
-                        if item_para_deletar:
-                            # 2. Localiza e atualiza os dados
-                            df.loc[df['Itens'] == item_para_deletar, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                                'Pendente', 0, 0.0, 0.0, "" ]
-                            
+                        # 4. Tenta o envio
+                        try:
                             conn.update(worksheet="ENXOVAL", data=df)
-                            st.success(f"O item {item_para_deletar} foi excluído com sucesso!!")
+                            st.success("O item {item_selecionado} foi comprado com sucesso!!")
+                            st.balloons()
                             time.sleep(2)
                             st.rerun()
+                        except Exception as e:
+                            st.error(f"Erro na API do Sheets: {e}")
+                    else:
+                        st.warning("Não esqueça de registrar essa conquista incrível🥺")
 
             else:
                 st.info("PARABÉNS!! Todos os itens já foram comprados🍾")
