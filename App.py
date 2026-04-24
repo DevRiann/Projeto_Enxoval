@@ -154,7 +154,7 @@ if verificar_senha():
                             # Localizar o item no DataFrame (Planilha) e mudar o status
                             df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
                             # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
-                            conn.update(worksheet="Página1", data=df)
+                            conn.update(worksheet="ENXOVAL", data=df)
 
                             st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
                             st.baloons()
