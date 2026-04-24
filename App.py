@@ -129,7 +129,7 @@ if verificar_senha():
                     }
 
                     # O conteúdo da foto em si
-                    media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg')
+                    media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg', resumble=True)
 
                     # Faz o upload
                     file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
