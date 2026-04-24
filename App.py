@@ -121,7 +121,7 @@ if verificar_senha():
 
                     email_pessoal = st.secrets["credentials"]["persona_email"]
                     # Credencias
-                    creds = service_account.Credentials.from_service_account_info( st.secrets["connections"]["gsheets"], scopes=["https://www.googleapis.com/auth/drive"]).with_subject(email_pessoal)
+                    creds = service_account.Credentials.from_service_account_info( st.secrets["connections"]["gsheets"], scopes=["https://www.googleapis.com/auth/drive"])
 
                     # Criando o serviço para API interagir com o Google Drive
                     service = build('drive', 'v3', credentials=creds)                    
