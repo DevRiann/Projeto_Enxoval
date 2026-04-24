@@ -72,7 +72,16 @@ if verificar_senha():
             status_counts = df['Status'].value_counts()
             st.bar_chart(status_counts)
 
-            st.progress(comprados/total_itens)
+            # Cálculo do proporcional para a barra (0.0 a 1.0)
+            proporcional = comprados / total_itens
+
+            # Cálculo da porcentagem para o texto (0 a 100)
+            porcentagem = proporcional * 100
+
+            # Exibição dos componentes
+            st.progress(proporcional)
+            st.write(f"✨ Você já completou {porcentagem:.0f}% do enxoval!")
+            
             # Exibindo o valor total gastos no final (ou em destaque)
             st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
