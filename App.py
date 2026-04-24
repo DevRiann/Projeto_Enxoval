@@ -179,9 +179,9 @@ if verificar_senha():
                 
                 with col2:
 
-                    item_atual = df[df['Itens'] == item_selecionado].iloc[0]
+                    lista_itens = df['Itens'].tolist()
 
-                    if item_atual['Status'] == 'Comprado':
+                    if lista_itens['Status'] == 'Comprado':
                         if st.button("❌ Deletar Compra "):
                             df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
                             'Pendente', 0, 0.0, 0.0, ""]
