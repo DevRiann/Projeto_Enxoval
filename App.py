@@ -184,7 +184,7 @@ if verificar_senha():
             else:
                 st.info("PARABÉNS!! Todos os itens já foram comprados")
     
-        case "Galeria":
+        case "Ver Enxoval":
             st.header("🎁 Ver Enxoval")
             st.write("Fotos dos itens comprados")
 
