@@ -132,7 +132,7 @@ if verificar_senha():
                     media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg', resumable=True)
 
                     # Faz o upload
-                    file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+                    file = service.files().create(body=file_metadata, media_body=media, fields='id', supportsAllDrives=True).execute()
 
                     id_foto = file.get('id') # Devolve o ID da foto nova
 
@@ -178,7 +178,7 @@ if verificar_senha():
                             df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
                             'Pendente', 0, 0.0, 0.0, ""]
 
-                            conn.update(worksheet="Página1", data=df)
+                            conn.update(worksheet="ENXOVAL", data=df)
 
                             st.warning(f"A compra de {item_selecionado} foi excluída!")
                             time.sleep(2)
