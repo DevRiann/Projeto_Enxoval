@@ -71,6 +71,8 @@ if verificar_senha():
             # Criandp um gráfico simples de barras
             status_counts = df['Status'].value_counts()
             st.bar_chart(status_counts)
+
+            st.progress(comprados/total_itens)
             # Exibindo o valor total gastos no final (ou em destaque)
             st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
