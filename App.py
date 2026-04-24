@@ -144,7 +144,6 @@ if verificar_senha():
                 col1, col2 = st.columns(2)
 
                 with col1:
-
                     if st.button("✔️ Confimar Compra"):
                     # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
                         if foto_final is not None:
@@ -178,19 +177,21 @@ if verificar_senha():
                             st.warning("Não esqueça de registrar essa conquista incrível🥺")
                 
                 with col2:
+                    if st.button("❌ Excluir a conta"):
+                        # Em vez de filtrar apenas pendentes para o delete, pegue a lista completa
+                        lista_itens_completa = df['Itens'].tolist()
 
-                    lista_itens = df['Itens'].tolist()
+                        item_para_deletar = st.selectbox("Selecione o item para excluir:", lista_itens_completa)
 
-                    if lista_itens['Status'] == 'Comprado':
-                        if st.button("❌ Deletar Compra "):
-                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                            'Pendente', 0, 0.0, 0.0, ""]
-
-                            conn.update(worksheet="ENXOVAL", data=df)
-
-                            st.warning(f"A compra de {item_selecionado} foi excluída!")
-                            time.sleep(2)
-                            st.rerun()
+                        # 2. Localiza e atualiza os dados
+                        df.loc[df['Itens'] == item_para_deletar, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                            'Pendente', 0, 0.0, 0.0, "" ]
+                        
+                        conn.update(worksheet="ENXOVAL", data=df)
+                        st.success("O item {item_para_deletar} foi excluído com sucesso!!")
+                        time.sleep(2)
+                        st.rerun()
+                        
             else:
                 st.info("PARABÉNS!! Todos os itens já foram comprados🍾")
     
