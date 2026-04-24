@@ -5,6 +5,7 @@ from googleapiclient.discovery import build
 from streamlit_gsheets import GSheetsConnection
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload
+import base64
 from PIL import Image
 import io
 import time
@@ -109,41 +110,30 @@ if verificar_senha():
                 # Agora precisamos decidir qual das duas usar
                 foto_final = foto_tirada if foto_tirada is not None else foto_carregada
 
-                def upload_drive(foto_final, item_selecionado, folder_id):
-                    # 1. Processamento da Imagem com Pillow 📸
-                    img = Image.open(foto_final)
-                    if img.mode in ("RGBA", "P"):
-                        img = img.convert("RGB")
-    
-                    buffer_imagem = io.BytesIO()
-                    img.save(buffer_imagem, format="JPEG")
-                    buffer_imagem.seek(0)
-
-                    # Credencias
-                    creds = service_account.Credentials.from_service_account_info( st.secrets["connections"]["gsheets"], scopes=["https://www.googleapis.com/auth/drive"])
-
-                    # Criando o serviço para API interagir com o Google Drive
-                    service = build('drive', 'v3', credentials=creds)                    
-
+                def converter_para_base64(foto_final):
                     try:
-                        # Detalhes do arquivo (Metadados)
-                        file_metadata = {'name': f"{item_selecionado}.jpg",'parents': [folder_id]}
-
-                        # O conteúdo da foto em si
-                        media = MediaIoBaseUpload(buffer_imagem, mimetype='image/jpeg', resumable=False)
-
-                        # Faz o upload
-                        file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-
-                        id_foto = file.get('id') # Devolve o ID da foto nova
-
-                        service.permissions().create(fileId = id_foto, body={'type': 'anyone', 'role': 'reader' }).execute()
+                        # 1. Abre a imagem com Pillow
+                        img = Image.open(foto_final)
+                        
+                        # 2. Redimensiona para não estourar o limite da célula do Sheets
+                        # (Largura máxima de 600px mantém a qualidade e reduz o tamanho do texto)
+                        img.thumbnail((600, 600))
+                        
+                        if img.mode in ("RGBA", "P"):
+                            img = img.convert("RGB")
+                        
+                        # 3. Salva no buffer em formato JPEG comprimido
+                        buffer_imagem = io.BytesIO()
+                        img.save(buffer_imagem, format="JPEG", quality=70) 
+                        
+                        # 4. Transforma os bytes em String Base64
+                        foto_b64 = base64.b64encode(buffer_imagem.getvalue()).decode('utf-8')
+                        
+                        # Retorna a string com o cabeçalho de imagem
+                        return f"data:image/jpeg;base64,{foto_b64}"
                     
-                        url_final = f"https://drive.google.com/uc?export=view&id={id_foto}"
-                    
-                        return url_final
                     except Exception as e:
-                        st.error(f"Erro no Upload: {e}")
+                        st.error(f"Erro na conversão: {e}")
                         return None
 
                 preco_total = quantidade * preco_unitario
@@ -159,14 +149,11 @@ if verificar_senha():
                     # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
                         if foto_final is not None:
                             try:
-                                st.write(f"DEBUG: foto={type(foto_final)}, item={item_selecionado}, folder={folder_id}")
-                                link_final = upload_drive(foto_final, item_selecionado, folder_id)
-                                st.write(f"O link que será salvo é: {link_final}")
-                                
+                                string_foto = converter_para_base64(foto_final)
                                 # Verifique se a função realmente devolveu o link antes de salvar
                                 if link_final:
                                     df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                                        'Comprado', quantidade, preco_unitario, preco_total, link_final]
+                                        'Comprado', quantidade, preco_unitario, preco_total, string_foto]
                                     conn.update(worksheet="ENXOVAL", data=df)
                                     st.success("Uhuuu! O item {item_selecionado} foi comprado com sucesso")
                                     st.balloons()
@@ -174,7 +161,7 @@ if verificar_senha():
                             except Exception as e:
                                 st.error(f"Erro ao processar: {e}")
                         else:
-                            st.warning("⚠️ Você precisa tirar uma foto ou carregar um arquivo primeiro!")
+                            st.warning("Não esqueça de registrar essa conquista incrível🥺")
                 
                 with col2:
 
