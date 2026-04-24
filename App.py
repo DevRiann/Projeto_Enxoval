@@ -78,10 +78,11 @@ if verificar_senha():
             # Cálculo da porcentagem para o texto (0 a 100)
             porcentagem = proporcional * 100
 
-            # Exibição dos componentes
+            st.divider() # Uma linha sutil para separar da lista
+            st.markdown(f"### 📊 Progresso do Enxoval: {porcentagem:.0f}%")
             st.progress(proporcional)
-            st.write(f"✨ Você já completou {porcentagem:.0f}% do enxoval!")
-            
+            st.write(f"Você já adquiriu **{comprados}** de **{total_itens}** itens planejados. Continue assim! ✨")
+
             # Exibindo o valor total gastos no final (ou em destaque)
             st.info(f"💰 Valor Total Investido até agora: R$ {valor_gasto:,.2f}")
 
