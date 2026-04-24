@@ -1,0 +1,14 @@
+# Arquivos de Segredo do Streamlit
+.streamlit/secrets.toml
+.streamlit/config.toml
+
+# Documentos e Planilhas (arquivos locais)
+*.xlsx
+*.xls
+*.pdf
+
+# Pastas de sistema e cache do Python
+__pycache__/
+.devcontainer/
+.venv/
+.DS_Store
