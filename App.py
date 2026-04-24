@@ -150,16 +150,28 @@ if verificar_senha():
                         if foto_final is not None:
                             try:
                                 string_foto = converter_para_base64(foto_final)
-                                # Verifique se a função realmente devolveu o link antes de salvar
-                                if string_foto:
-                                    df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                                        'Comprado', quantidade, preco_unitario, preco_total, string_foto]
+                                df['Foto'] = df['Foto'].astype(str)
+                
+                                # 2. Localiza e atualiza os dados
+                                df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                                    'Comprado', 
+                                    float(quantidade), 
+                                    float(preco_unitario), 
+                                    float(preco_total), 
+                                    str(string_foto) # Garante que entra como string
+                                ]
+                                
+                                # 3. Limpeza de Segurança: Substituir valores NaN por vazio 
+                                # (O Google Sheets odeia receber NaN do pandas)
+                                df = df.fillna("")
+
+                                # 4. Tenta o envio
+                                try:
                                     conn.update(worksheet="ENXOVAL", data=df)
-                                    st.success("Uhuuu! O item {item_selecionado} foi comprado com sucesso")
-                                    st.balloons()
+                                    st.success("Salvo com sucesso!")
                                     st.rerun()
-                            except Exception as e:
-                                st.error(f"Erro ao processar: {e}")
+                                except Exception as e:
+                                    st.error(f"Erro na API do Sheets: {e}")
                         else:
                             st.warning("Não esqueça de registrar essa conquista incrível🥺")
                 
@@ -178,7 +190,7 @@ if verificar_senha():
                             time.sleep(2)
                             st.rerun()
             else:
-                st.info("PARABÉNS!! Todos os itens já foram comprados")
+                st.info("PARABÉNS!! Todos os itens já foram comprados🍾")
     
         case "Ver Enxoval":
             st.header("🎁 Ver Enxoval")
