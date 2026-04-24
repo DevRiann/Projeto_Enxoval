@@ -150,26 +150,24 @@ if verificar_senha():
                 with col1:
 
                     if st.button("✔️ Confimar Compra"):
-                        if st.button("Confirmar Compra"):
                     # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
-                            if foto_final is not None:
-                                try:
-                                    st.write(f"DEBUG: foto={type(foto_final)}, item={item_selecionado}, folder={folder_id}")
-                                    link_final = upload_drive(foto_final, item_selecionado, folder_id)
-                                    
-                                    # Verifique se a função realmente devolveu o link antes de salvar
-                                    if link_final:
-                                        df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
-                                            'Comprado', quantidade, preco_unitario, preco_total, link_final
-                                        ]
-                                        conn.update(worksheet="ENXOVAL", data=df)
-                                        st.success("Compra salva com sucesso!")
-                                        st.balloons()
-                                        st.rerun()
-                                except Exception as e:
-                                    st.error(f"Erro ao processar: {e}")
-                            else:
-                                st.warning("⚠️ Você precisa tirar uma foto ou carregar um arquivo primeiro!")
+                        if foto_final is not None:
+                            try:
+                                st.write(f"DEBUG: foto={type(foto_final)}, item={item_selecionado}, folder={folder_id}")
+                                link_final = upload_drive(foto_final, item_selecionado, folder_id)
+                                
+                                # Verifique se a função realmente devolveu o link antes de salvar
+                                if link_final:
+                                    df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                                        'Comprado', quantidade, preco_unitario, preco_total, link_final]
+                                    conn.update(worksheet="ENXOVAL", data=df)
+                                    st.success("Uhuuu! O item {item_selecionado} foi comprado com sucesso")
+                                    st.balloons()
+                                    st.rerun()
+                            except Exception as e:
+                                st.error(f"Erro ao processar: {e}")
+                        else:
+                            st.warning("⚠️ Você precisa tirar uma foto ou carregar um arquivo primeiro!")
                 
                 with col2:
 
