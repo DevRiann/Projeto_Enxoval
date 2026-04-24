@@ -154,7 +154,7 @@ if verificar_senha():
                         # 4. Tenta o envio
                         try:
                             conn.update(worksheet="ENXOVAL", data=df)
-                            st.success("O item {item_selecionado} foi comprado com sucesso!!")
+                            st.success(f"O item {item_selecionado} foi comprado com sucesso!!")
                             st.balloons()
                             time.sleep(2)
                             st.rerun()
