@@ -37,7 +37,7 @@ if verificar_senha():
 
     conn = st.connection("gsheets", type=GSheetsConnection)
     # O conn já sabe ler o secrets.toml, então basta pedir o campo 'spreadsheet'
-    df = conn.read(spreadsheet=st.secrets["connections"]["gsheets"]["spreadsheet"])
+    df = conn.read(spreadsheet=st.secrets["connections"]["gsheets"]["spreadsheet"], ttl=0)
 
     # O ID que você pegou na URL do navegador vai aqui
     folder_id = "10ZQcTVfFMHWNXgTyv5yyFU-UbXwzx3YK"
@@ -157,7 +157,7 @@ if verificar_senha():
                             conn.update(worksheet="ENXOVAL", data=df)
 
                             st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
-                            st.baloons()
+                            st.balloons()
                             
                             time.sleep(2)
                         
