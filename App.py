@@ -47,11 +47,11 @@ if verificar_senha():
 
     # Criandp a Barra Lateral
     st.sidebar.title("Menu")
-    aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard & Valores Total","Ver Enxoval", "Carrinho de Compras", "Gerenciar & Excluir "])
+    aba = st.sidebar.radio("Selecione uma opção:", ["Dashboard","Ver Enxoval", "Carrinho de Compras", "Gerenciar & Excluir"])
 
 
     match aba:
-        case "Dashboard & Lista":
+        case "Dashboard":
             st.header ("📊Resumo e Valor Total")
             
             # Contagem de itens
