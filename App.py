@@ -150,26 +150,26 @@ if verificar_senha():
                 with col1:
 
                     if st.button("✔️ Confimar Compra"):
-                        if foto_final is not None:
-                            link_final = upload_drive(foto_final, item_selecionado, folder_id)
-
-                            st.write(f"Link gerado: {link_final}")
-
-                            # Localizar o item no DataFrame (Planilha) e mudar o status
-                            df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = ['Comprado', quantidade, preco_unitario, preco_total, link_final]
-                            # Utilizando API para salvar as alterações na nuvem (Planilha do Google Sheets)
-                            conn.update(worksheet="ENXOVAL", data=df)
-
-                            st.success(f"Uhuul! {item_selecionado} marcado como comprado!")
-                            st.balloons()
-                            
-                            time.sleep(2)
-                        
-                            # Recarrega a página para atualizar a lista
-                            st.rerun()
-                
-                        else:
-                            st.warning("Não esquece de registrar essa conquista incrivel!!🥺")
+                        if st.button("Confirmar Compra"):
+                    # VERIFICAÇÃO CRUCIAL: Só executa se foto_final não for None
+                            if foto_final is not None:
+                                try:
+                                    st.write(f"DEBUG: foto={type(foto_final)}, item={item_selecionado}, folder={folder_id}")
+                                    link_final = upload_drive(foto_final, item_selecionado, folder_id)
+                                    
+                                    # Verifique se a função realmente devolveu o link antes de salvar
+                                    if link_final:
+                                        df.loc[df['Itens'] == item_selecionado, ['Status','Quantidade','Preço Unitário','Preço Total', 'Foto']] = [
+                                            'Comprado', quantidade, preco_unitario, preco_total, link_final
+                                        ]
+                                        conn.update(worksheet="ENXOVAL", data=df)
+                                        st.success("Compra salva com sucesso!")
+                                        st.balloons()
+                                        st.rerun()
+                                except Exception as e:
+                                    st.error(f"Erro ao processar: {e}")
+                            else:
+                                st.warning("⚠️ Você precisa tirar uma foto ou carregar um arquivo primeiro!")
                 
                 with col2:
 
