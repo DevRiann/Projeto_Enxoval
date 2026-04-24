@@ -150,7 +150,7 @@ if verificar_senha():
                 with col1:
 
                     if st.button("✔️ Confimar Compra"):
-                        if foto_final:
+                        if foto_final is not None:
                             link_final = upload_drive(foto_final, item_selecionado, folder_id)
 
                             st.write(f"Link gerado: {link_final}")
